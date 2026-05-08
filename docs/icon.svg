@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Citizen Lab Notebook icon">
+  <rect width="128" height="128" rx="24" fill="#f6f7f2"/>
+  <path d="M30 22h54a14 14 0 0 1 14 14v70H44a14 14 0 0 1-14-14V22Z" fill="#005f73"/>
+  <path d="M44 36h38M44 52h38M44 68h24" stroke="#f6f7f2" stroke-width="7" stroke-linecap="round"/>
+  <path d="M37 94c12-16 23-15 34 0 9 12 18 12 27 0" fill="none" stroke="#d99a27" stroke-width="8" stroke-linecap="round"/>
+</svg>
