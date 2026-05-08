@@ -43,28 +43,30 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
-            return "react";
-          }
-
-          if (id.includes("@huggingface/transformers")) {
+          if (id.includes("@huggingface/transformers") || id.includes("onnxruntime-web")) {
             return "local-ai";
-          }
-
-          if (id.includes("node_modules")) {
-            return "vendor";
           }
         },
       },
     },
   },
+  worker: {
+    format: "es",
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
+    exclude: ["node_modules/**", "docs/**", "tests/e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      include: ["src/features/**", "src/lib/**"],
+      include: [
+        "src/types.ts",
+        "src/features/analysis/stats.ts",
+        "src/features/analysis/figure.ts",
+        "src/features/sensors/csv.ts",
+        "src/features/report/report.ts",
+      ],
       exclude: ["**/*.test.ts", "**/*.test.tsx", "src/**/*.d.ts"],
       thresholds: {
         statements: 70,

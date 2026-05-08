@@ -53,7 +53,8 @@ export async function captureWebUsbReadings(): Promise<WebUsbCaptureResult> {
   const readings = parseUsbText(chunks.join("\n"));
 
   return {
-    deviceLabel: [device.manufacturerName, device.productName].filter(Boolean).join(" ") || "USB device",
+    deviceLabel:
+      [device.manufacturerName, device.productName].filter(Boolean).join(" ") || "USB device",
     readings,
   };
 }
@@ -64,7 +65,9 @@ export function parseUsbText(contents: string): SensorReading[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .flatMap((line, index) => {
-      const match = line.match(/(-?\d+(?:\.\d+)?)\s*[,;\t ]\s*(-?\d+(?:\.\d+)?)(?:\s*([a-zA-Z%/]+))?/);
+      const match = line.match(
+        /(-?\d+(?:\.\d+)?)\s*[,;\t ]\s*(-?\d+(?:\.\d+)?)(?:\s*([a-zA-Z%/]+))?/,
+      );
 
       if (!match) {
         return [];

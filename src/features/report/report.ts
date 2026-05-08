@@ -21,7 +21,9 @@ function sentenceList(items: string[]): string {
 export function buildReportSections(input: ReportInput): ReportSection[] {
   const { experiment, stats, aiDraft } = input;
   const observations = experiment.voiceNotes.map((note) => note.text);
-  const metadata = experiment.imageMetadata.map((image) => `${image.name}: ${Object.keys(image.fields).join(", ")}`);
+  const metadata = experiment.imageMetadata.map(
+    (image) => `${image.name}: ${Object.keys(image.fields).join(", ")}`,
+  );
   const trend =
     stats.slope === null
       ? "The dataset does not yet contain enough points to estimate a trend."

@@ -12,8 +12,12 @@ interface SensorPanelProps {
 }
 
 export function SensorPanel({ readings, onChange }: SensorPanelProps) {
-  const [csv, setCsv] = useState("time,value,unit,label\n0,0.4,cm,foam height\n60,0.7,cm,foam height");
-  const [status, setStatus] = useState("Import CSV, generate sample data, or capture from a WebUSB sensor.");
+  const [csv, setCsv] = useState(
+    "time,value,unit,label\n0,0.4,cm,foam height\n60,0.7,cm,foam height",
+  );
+  const [status, setStatus] = useState(
+    "Import CSV, generate sample data, or capture from a WebUSB sensor.",
+  );
 
   function importCsv(contents = csv) {
     const parsed = parseSensorCsv(contents, readings[0]?.unit ?? "");
@@ -58,7 +62,13 @@ export function SensorPanel({ readings, onChange }: SensorPanelProps) {
       eyebrow="WebUSB + CSV"
       actions={
         <>
-          <button className="ghost-button" type="button" onClick={() => downloadText("sensor-readings.csv", readingsToCsv(readings), "text/csv;charset=utf-8")}>
+          <button
+            className="ghost-button"
+            type="button"
+            onClick={() =>
+              downloadText("sensor-readings.csv", readingsToCsv(readings), "text/csv;charset=utf-8")
+            }
+          >
             <Download size={16} />
             CSV
           </button>
@@ -81,7 +91,11 @@ export function SensorPanel({ readings, onChange }: SensorPanelProps) {
         <label className="file-button">
           <FileUp size={16} />
           Upload CSV
-          <input type="file" accept=".csv,text/csv" onChange={(event) => importFile(event.target.files?.[0])} />
+          <input
+            type="file"
+            accept=".csv,text/csv"
+            onChange={(event) => importFile(event.target.files?.[0])}
+          />
         </label>
       </div>
 

@@ -33,7 +33,12 @@ export function CapabilityGrid() {
         microphoneAvailable ? "recording available" : "manual notes available",
         <Mic size={18} />,
       )}
-      {status("Storage", storageAvailable, storageAvailable ? "IndexedDB ready" : "export only", <Database size={18} />)}
+      {status(
+        "Storage",
+        storageAvailable,
+        storageAvailable ? "IndexedDB ready" : "export only",
+        <Database size={18} />,
+      )}
       {status("Local AI", true, "Whisper and LLM load on demand", <BrainCircuit size={18} />)}
       {status("Offline shell", true, "PWA cache after first build", <WifiOff size={18} />)}
     </ul>

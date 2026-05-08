@@ -147,7 +147,11 @@ export function VoicePanel({ notes, onAddNote, onDeleteNote }: VoicePanelProps) 
 
       <label className="field">
         <span>Manual observation</span>
-        <textarea value={manualNote} onChange={(event) => setManualNote(event.target.value)} rows={3} />
+        <textarea
+          value={manualNote}
+          onChange={(event) => setManualNote(event.target.value)}
+          rows={3}
+        />
       </label>
       <button
         className="ghost-button"
@@ -170,7 +174,12 @@ export function VoicePanel({ notes, onAddNote, onDeleteNote }: VoicePanelProps) 
               <time>{new Date(note.createdAt).toLocaleString()}</time>
               <p>{note.text}</p>
             </div>
-            <button className="icon-only" type="button" onClick={() => onDeleteNote(note.id)} aria-label="Delete note">
+            <button
+              className="icon-only"
+              type="button"
+              onClick={() => onDeleteNote(note.id)}
+              aria-label="Delete note"
+            >
               <Trash2 size={16} />
             </button>
           </article>

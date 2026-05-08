@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { PyodideAnalysisRequest, PyodideAnalysisResult } from "../features/analysis/pyodideClient";
+import type {
+  PyodideAnalysisRequest,
+  PyodideAnalysisResult,
+} from "../features/analysis/pyodideClient";
 
 const workerSelf = self as DedicatedWorkerGlobalScope & {
   loadPyodide?: (options: { indexURL: string }) => Promise<any>;
@@ -30,7 +33,10 @@ async function getPyodide(requestId: string): Promise<any> {
   return pyodidePromise;
 }
 
-async function analyze(requestId: string, payload: PyodideAnalysisRequest): Promise<PyodideAnalysisResult> {
+async function analyze(
+  requestId: string,
+  payload: PyodideAnalysisRequest,
+): Promise<PyodideAnalysisResult> {
   const pyodide = await getPyodide(requestId);
   postStatus(requestId, "Running Python analysis");
 

@@ -11,7 +11,9 @@ interface ImagePanelProps {
 }
 
 export function ImagePanel({ images, onAddImage, onDeleteImage }: ImagePanelProps) {
-  const [status, setStatus] = useState("Upload an experiment photo to extract browser-readable metadata.");
+  const [status, setStatus] = useState(
+    "Upload an experiment photo to extract browser-readable metadata.",
+  );
 
   async function handleFile(file: File | undefined) {
     if (!file) {
@@ -33,7 +35,11 @@ export function ImagePanel({ images, onAddImage, onDeleteImage }: ImagePanelProp
       <label className="file-button">
         <FileImage size={16} />
         Upload image
-        <input type="file" accept="image/*" onChange={(event) => handleFile(event.target.files?.[0])} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(event) => handleFile(event.target.files?.[0])}
+        />
       </label>
 
       <p className="status-line">{status}</p>
@@ -46,7 +52,12 @@ export function ImagePanel({ images, onAddImage, onDeleteImage }: ImagePanelProp
             <div>
               <div className="card-title-row">
                 <strong>{image.name}</strong>
-                <button className="icon-only" type="button" onClick={() => onDeleteImage(image.id)} aria-label="Delete image metadata">
+                <button
+                  className="icon-only"
+                  type="button"
+                  onClick={() => onDeleteImage(image.id)}
+                  aria-label="Delete image metadata"
+                >
                   <Trash2 size={16} />
                 </button>
               </div>

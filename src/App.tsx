@@ -32,7 +32,10 @@ export function App() {
   const [saveState, setSaveState] = useState("loading local notebook");
   const [commit, setCommit] = useState<CommitInfo | null>(null);
 
-  const stats = useMemo(() => computeSummaryStats(experiment.sensorReadings), [experiment.sensorReadings]);
+  const stats = useMemo(
+    () => computeSummaryStats(experiment.sensorReadings),
+    [experiment.sensorReadings],
+  );
   const figureSvg = useMemo(
     () => renderSensorFigure(experiment.sensorReadings, experiment.title || "Experiment figure"),
     [experiment.sensorReadings, experiment.title],
@@ -108,7 +111,9 @@ export function App() {
   }
 
   function deleteImageMetadata(id: string) {
-    updateExperiment({ imageMetadata: experiment.imageMetadata.filter((image) => image.id !== id) });
+    updateExperiment({
+      imageMetadata: experiment.imageMetadata.filter((image) => image.id !== id),
+    });
   }
 
   function newExperiment() {
@@ -117,7 +122,11 @@ export function App() {
   }
 
   function exportJson() {
-    downloadText(`${experiment.title || "experiment"}.json`, exportExperimentJson(experiment), "application/json");
+    downloadText(
+      `${experiment.title || "experiment"}.json`,
+      exportExperimentJson(experiment),
+      "application/json",
+    );
   }
 
   async function importJson(file: File | undefined) {
@@ -144,7 +153,11 @@ export function App() {
         <div className="import-row">
           <label className="file-button">
             Import notebook JSON
-            <input type="file" accept="application/json,.json" onChange={(event) => importJson(event.target.files?.[0])} />
+            <input
+              type="file"
+              accept="application/json,.json"
+              onChange={(event) => importJson(event.target.files?.[0])}
+            />
           </label>
         </div>
 

@@ -1,7 +1,13 @@
 import type { SensorReading } from "../../types";
 import { linearRegression } from "./stats";
 
-function scale(value: number, fromMin: number, fromMax: number, toMin: number, toMax: number): number {
+function scale(
+  value: number,
+  fromMin: number,
+  fromMax: number,
+  toMin: number,
+  toMax: number,
+): number {
   if (fromMax === fromMin) {
     return (toMin + toMax) / 2;
   }
@@ -45,7 +51,10 @@ export function renderSensorFigure(readings: SensorReading[], title: string): st
     scale(value, minY - yPadding, maxY + yPadding, margin.top + plotHeight, margin.top);
 
   const path = points
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${toX(point.time).toFixed(2)} ${toY(point.value).toFixed(2)}`)
+    .map(
+      (point, index) =>
+        `${index === 0 ? "M" : "L"} ${toX(point.time).toFixed(2)} ${toY(point.value).toFixed(2)}`,
+    )
     .join(" ");
 
   const dots = points

@@ -41,11 +41,11 @@ export function computeSummaryStats(readings: SensorReading[]): SummaryStats {
   const sum = values.reduce((total, value) => total + value, 0);
   const mean = sum / count;
   const median =
-    count % 2 === 0 ? (values[count / 2 - 1] + values[count / 2]) / 2 : values[Math.floor(count / 2)];
+    count % 2 === 0
+      ? (values[count / 2 - 1] + values[count / 2]) / 2
+      : values[Math.floor(count / 2)];
   const variance =
-    count > 1
-      ? values.reduce((total, value) => total + (value - mean) ** 2, 0) / (count - 1)
-      : 0;
+    count > 1 ? values.reduce((total, value) => total + (value - mean) ** 2, 0) / (count - 1) : 0;
 
   const regression = linearRegression(points.map((point) => [point.time, point.value] as const));
 

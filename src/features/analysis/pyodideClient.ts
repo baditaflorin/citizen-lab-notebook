@@ -46,7 +46,9 @@ export function runPyodideAnalysis(
   const pyodideWorker = getWorker();
 
   return new Promise((resolve, reject) => {
-    const handleMessage = (event: MessageEvent<WorkerResponse | { requestId: string; status: string }>) => {
+    const handleMessage = (
+      event: MessageEvent<WorkerResponse | { requestId: string; status: string }>,
+    ) => {
       if (event.data.requestId !== requestId) {
         return;
       }

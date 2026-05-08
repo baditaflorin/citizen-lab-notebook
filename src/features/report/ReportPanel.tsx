@@ -39,7 +39,11 @@ export function ReportPanel({ experiment, stats, figureSvg }: ReportPanelProps) 
     const reportWindow = window.open("", "_blank", "noopener,noreferrer");
 
     if (!reportWindow) {
-      downloadText(`${experiment.title || "lab-report"}.html`, reportHtml, "text/html;charset=utf-8");
+      downloadText(
+        `${experiment.title || "lab-report"}.html`,
+        reportHtml,
+        "text/html;charset=utf-8",
+      );
       setStatus("Popup blocked. Downloaded the report HTML instead.");
       return;
     }
@@ -67,7 +71,13 @@ export function ReportPanel({ experiment, stats, figureSvg }: ReportPanelProps) 
           <button
             className="ghost-button"
             type="button"
-            onClick={() => downloadText(`${experiment.title || "lab-report"}.html`, reportHtml, "text/html;charset=utf-8")}
+            onClick={() =>
+              downloadText(
+                `${experiment.title || "lab-report"}.html`,
+                reportHtml,
+                "text/html;charset=utf-8",
+              )
+            }
           >
             <Download size={16} />
             HTML

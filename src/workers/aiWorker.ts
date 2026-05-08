@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const workerSelf = self as DedicatedWorkerGlobalScope;
 
-type PipelineFactory = (task: string, model: string, options?: Record<string, unknown>) => Promise<any>;
+type PipelineFactory = (
+  task: string,
+  model: string,
+  options?: Record<string, unknown>,
+) => Promise<any>;
 
 interface TransformersModule {
   pipeline: PipelineFactory;

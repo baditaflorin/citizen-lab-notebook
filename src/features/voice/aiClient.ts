@@ -52,11 +52,17 @@ function requestWorker(
   });
 }
 
-export function transcribeWithWhisper(blob: Blob, onStatus: (message: string) => void): Promise<string> {
+export function transcribeWithWhisper(
+  blob: Blob,
+  onStatus: (message: string) => void,
+): Promise<string> {
   return requestWorker("transcribe", { blob }, onStatus);
 }
 
-export function draftWithLocalModel(input: ReportInput, onStatus: (message: string) => void): Promise<string> {
+export function draftWithLocalModel(
+  input: ReportInput,
+  onStatus: (message: string) => void,
+): Promise<string> {
   return requestWorker(
     "draft",
     {

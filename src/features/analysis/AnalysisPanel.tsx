@@ -18,7 +18,9 @@ function show(value: number | null): string {
 
 export function AnalysisPanel({ title, readings, stats, figureSvg }: AnalysisPanelProps) {
   const [formula, setFormula] = useState("x**2 + 3*x + 2");
-  const [status, setStatus] = useState("JavaScript stats are instant. Pyodide runs Python on demand.");
+  const [status, setStatus] = useState(
+    "JavaScript stats are instant. Pyodide runs Python on demand.",
+  );
   const [pyodideResult, setPyodideResult] = useState<PyodideAnalysisResult | null>(null);
 
   async function runPython() {
@@ -75,7 +77,10 @@ export function AnalysisPanel({ title, readings, stats, figureSvg }: AnalysisPan
               </p>
             ) : null}
           </div>
-          <div className="figure-frame compact" dangerouslySetInnerHTML={{ __html: pyodideResult.svg }} />
+          <div
+            className="figure-frame compact"
+            dangerouslySetInnerHTML={{ __html: pyodideResult.svg }}
+          />
         </div>
       ) : null}
     </Section>

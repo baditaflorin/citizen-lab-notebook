@@ -15,7 +15,7 @@
     "prebuild": "node scripts/prepare-pages.mjs",
     "build": "vite build && node scripts/finalize-pages.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
-    "pages-preview": "http-server docs -a 127.0.0.1 -p 4173 -c-1",
+    "pages-preview": "bash scripts/pages-preview.sh",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

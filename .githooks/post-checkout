@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+old_ref="${1:-}"
+new_ref="${2:-}"
+
+if [[ -n "$old_ref" && -n "$new_ref" ]] && git diff --name-only "$old_ref" "$new_ref" | grep -q "^package-lock.json$"; then
+  npm install
+fi
