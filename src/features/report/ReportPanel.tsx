@@ -36,7 +36,7 @@ export function ReportPanel({ experiment, stats, figureSvg }: ReportPanelProps) 
   }
 
   function printReport() {
-    const reportWindow = window.open("", "_blank", "noopener,noreferrer");
+    const reportWindow = window.open("", "_blank");
 
     if (!reportWindow) {
       downloadText(
@@ -48,6 +48,7 @@ export function ReportPanel({ experiment, stats, figureSvg }: ReportPanelProps) 
       return;
     }
 
+    reportWindow.opener = null;
     reportWindow.document.write(reportHtml);
     reportWindow.document.close();
     reportWindow.focus();
