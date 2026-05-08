@@ -1,4 +1,4 @@
-.PHONY: help install-hooks dev build test test-integration smoke lint fmt pages-preview clean hooks-pre-commit hooks-commit-msg hooks-pre-push
+.PHONY: help install-hooks dev build test test-integration smoke lint fmt pages-preview demo-screenshot clean hooks-pre-commit hooks-commit-msg hooks-pre-push
 
 help:
 	@printf "%s\n" "Citizen Lab Notebook targets"
@@ -11,6 +11,7 @@ help:
 	@printf "%s\n" "  make lint              run ESLint, Prettier check, TypeScript, and npm audit"
 	@printf "%s\n" "  make fmt               format files"
 	@printf "%s\n" "  make pages-preview     serve docs/ under the GitHub Pages base path"
+	@printf "%s\n" "  make demo-screenshot   capture docs/demo.png for the README"
 	@printf "%s\n" "  make clean             remove generated local artifacts"
 
 install-hooks:
@@ -44,6 +45,9 @@ fmt:
 
 pages-preview:
 	bash scripts/pages-preview.sh
+
+demo-screenshot:
+	bash scripts/capture-demo.sh
 
 hooks-pre-commit:
 	.githooks/pre-commit

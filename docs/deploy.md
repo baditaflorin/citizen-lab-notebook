@@ -8,6 +8,16 @@ https://baditaflorin.github.io/citizen-lab-notebook/
 
 GitHub Pages serves the `docs/` directory from the `main` branch. The production Vite build writes directly into `docs/`, and `docs/` is intentionally committed.
 
+The app base path is:
+
+`/citizen-lab-notebook/`
+
+The local preview command serves the same base path:
+
+```sh
+make pages-preview
+```
+
 ## Manual Republish
 
 ```sh
