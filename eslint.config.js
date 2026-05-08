@@ -4,7 +4,15 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["docs/assets/**", "docs/service-worker.js", "coverage/**", "node_modules/**"] },
+  {
+    ignores: [
+      "docs/assets/**",
+      "docs/service-worker.js",
+      "public/service-worker.js",
+      "coverage/**",
+      "node_modules/**",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

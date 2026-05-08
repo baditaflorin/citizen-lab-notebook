@@ -1,0 +1,185 @@
+import { useEffect, useMemo, useState } from "react";
+import { CapabilityGrid } from "./components/CapabilityGrid";
+import { Header } from "./components/Header";
+import { AnalysisPanel } from "./features/analysis/AnalysisPanel";
+import { renderSensorFigure } from "./features/analysis/figure";
+import { computeSummaryStats } from "./features/analysis/stats";
+import { ExperimentSetup } from "./features/experiments/ExperimentSetup";
+import { ImagePanel } from "./features/images/ImagePanel";
+import { ReportPanel } from "./features/report/ReportPanel";
+import { SensorPanel } from "./features/sensors/SensorPanel";
+import { VoicePanel } from "./features/voice/VoicePanel";
+import { resolveCommitInfo, type CommitInfo } from "./lib/buildInfo";
+import { downloadText } from "./lib/download";
+import {
+  exportExperimentJson,
+  importExperimentJson,
+  listExperiments,
+  saveExperiment,
+} from "./lib/storage";
+import {
+  createExperiment,
+  touchExperiment,
+  type Experiment,
+  type ImageMetadata,
+  type SensorReading,
+  type VoiceNote,
+} from "./types";
+
+export function App() {
+  const [experiment, setExperiment] = useState<Experiment>(() => createExperiment());
+  const [loaded, setLoaded] = useState(false);
+  const [saveState, setSaveState] = useState("loading local notebook");
+  const [commit, setCommit] = useState<CommitInfo | null>(null);
+
+  const stats = useMemo(() => computeSummaryStats(experiment.sensorReadings), [experiment.sensorReadings]);
+  const figureSvg = useMemo(
+    () => renderSensorFigure(experiment.sensorReadings, experiment.title || "Experiment figure"),
+    [experiment.sensorReadings, experiment.title],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    listExperiments()
+      .then((experiments) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (experiments[0]) {
+          setExperiment(experiments[0]);
+        }
+
+        setLoaded(true);
+        setSaveState("local notebook ready");
+      })
+      .catch((error: unknown) => {
+        setLoaded(true);
+        setSaveState(error instanceof Error ? error.message : "local storage unavailable");
+      });
+
+    resolveCommitInfo().then((info) => {
+      if (!cancelled) {
+        setCommit(info);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) {
+      return;
+    }
+
+    setSaveState("saving");
+    const timeout = window.setTimeout(() => {
+      saveExperiment(experiment)
+        .then(() => setSaveState("saved locally"))
+        .catch((error: unknown) =>
+          setSaveState(error instanceof Error ? error.message : "could not save locally"),
+        );
+    }, 450);
+
+    return () => window.clearTimeout(timeout);
+  }, [experiment, loaded]);
+
+  function updateExperiment(patch: Partial<Experiment>) {
+    setExperiment((current) => touchExperiment({ ...current, ...patch }));
+  }
+
+  function updateReadings(sensorReadings: SensorReading[]) {
+    updateExperiment({ sensorReadings });
+  }
+
+  function addVoiceNote(note: VoiceNote) {
+    updateExperiment({ voiceNotes: [...experiment.voiceNotes, note] });
+  }
+
+  function deleteVoiceNote(id: string) {
+    updateExperiment({ voiceNotes: experiment.voiceNotes.filter((note) => note.id !== id) });
+  }
+
+  function addImageMetadata(image: ImageMetadata) {
+    updateExperiment({ imageMetadata: [...experiment.imageMetadata, image] });
+  }
+
+  function deleteImageMetadata(id: string) {
+    updateExperiment({ imageMetadata: experiment.imageMetadata.filter((image) => image.id !== id) });
+  }
+
+  function newExperiment() {
+    setExperiment(createExperiment());
+    setSaveState("new notebook created");
+  }
+
+  function exportJson() {
+    downloadText(`${experiment.title || "experiment"}.json`, exportExperimentJson(experiment), "application/json");
+  }
+
+  async function importJson(file: File | undefined) {
+    if (!file) {
+      return;
+    }
+
+    try {
+      const imported = importExperimentJson(await file.text());
+      setExperiment(touchExperiment(imported));
+      setSaveState("imported notebook");
+    } catch (error) {
+      setSaveState(error instanceof Error ? error.message : "import failed");
+    }
+  }
+
+  return (
+    <div className="app-shell">
+      <Header commit={commit} saveState={saveState} />
+
+      <main>
+        <CapabilityGrid />
+
+        <div className="import-row">
+          <label className="file-button">
+            Import notebook JSON
+            <input type="file" accept="application/json,.json" onChange={(event) => importJson(event.target.files?.[0])} />
+          </label>
+        </div>
+
+        <div className="workspace-grid">
+          <div className="primary-column">
+            <ExperimentSetup
+              experiment={experiment}
+              onChange={updateExperiment}
+              onNew={newExperiment}
+              onExport={exportJson}
+            />
+            <SensorPanel readings={experiment.sensorReadings} onChange={updateReadings} />
+            <AnalysisPanel
+              title={experiment.title}
+              readings={experiment.sensorReadings}
+              stats={stats}
+              figureSvg={figureSvg}
+            />
+            <ReportPanel experiment={experiment} stats={stats} figureSvg={figureSvg} />
+          </div>
+
+          <aside className="side-column" aria-label="Capture tools">
+            <VoicePanel
+              notes={experiment.voiceNotes}
+              onAddNote={addVoiceNote}
+              onDeleteNote={deleteVoiceNote}
+            />
+            <ImagePanel
+              images={experiment.imageMetadata}
+              onAddImage={addImageMetadata}
+              onDeleteImage={deleteImageMetadata}
+            />
+          </aside>
+        </div>
+      </main>
+    </div>
+  );
+}
