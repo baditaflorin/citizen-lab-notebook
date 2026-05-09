@@ -66,3 +66,12 @@ These are the 10 real-world inputs Phase 2 should turn into committed fixtures a
 - No new hardware-specific capture UI beyond making current CSV/WebUSB text ingestion smarter.
 - No server-side Whisper, LLM, ExifTool, database, or Docker service.
 - No Phase 3 polish work until the real-data pass rate and confidence/error behavior improve.
+
+## Pass-Rate Trend
+
+| Stage        | Pass rate | Notes                                                                                             |
+| ------------ | --------- | ------------------------------------------------------------------------------------------------- |
+| v0.1.0 audit | 2/10      | Clean classroom CSV and simple phone-style CSV worked; messy real exports failed or were partial. |
+| v0.2.0       | 10/10     | All 10 fixtures import with expected shape, confidence, skipped-row/anomaly reporting, and tests. |
+
+The v0.2.0 fixture suite asserts inferred source shape, delimiter, decimal separator, labels, units, confidence, skipped rows, anomalies, and deterministic re-runs.
