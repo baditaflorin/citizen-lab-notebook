@@ -49,6 +49,7 @@ export default defineConfig({
         "src/types.ts",
         "src/features/analysis/stats.ts",
         "src/features/analysis/figure.ts",
+        "src/features/sensors/importer.ts",
         "src/features/sensors/csv.ts",
         "src/features/report/report.ts",
       ],

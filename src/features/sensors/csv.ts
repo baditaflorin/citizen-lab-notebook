@@ -1,49 +1,27 @@
 import { createId, type SensorReading } from "../../types";
+import { analyzeSensorInput } from "./importer";
 
 export function parseSensorCsv(contents: string, fallbackUnit = ""): SensorReading[] {
-  const lines = contents
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  if (lines.length === 0) {
-    return [];
-  }
-
-  const first = lines[0].toLowerCase();
-  const hasHeader = first.includes("time") || first.includes("value");
-  const dataLines = hasHeader ? lines.slice(1) : lines;
-
-  return dataLines.flatMap((line, index) => {
-    const [timeRaw, valueRaw, unitRaw, labelRaw] = line.split(",").map((part) => part.trim());
-    const time = Number(timeRaw);
-    const value = Number(valueRaw);
-
-    if (!Number.isFinite(time) || !Number.isFinite(value)) {
-      return [];
-    }
-
-    return [
-      {
-        id: createId("reading"),
-        time,
-        value,
-        unit: unitRaw ?? fallbackUnit,
-        label: labelRaw || `csv-${index + 1}`,
-      },
-    ];
-  });
+  const readings = analyzeSensorInput(contents, { sourceName: "CSV paste" }).readings;
+  return fallbackUnit
+    ? readings.map((reading) => ({ ...reading, unit: reading.unit || fallbackUnit }))
+    : readings;
 }
 
 export function readingsToCsv(readings: SensorReading[]): string {
   const rows = readings.map((reading) =>
     [reading.time, reading.value, reading.unit, reading.label]
-      .map((value) => String(value).replaceAll('"', '""'))
-      .map((value) => (value.includes(",") ? `"${value}"` : value))
+      .map((value) => escapeCsvCell(String(value)))
       .join(","),
   );
 
   return ["time,value,unit,label", ...rows].join("\n");
+}
+
+function escapeCsvCell(value: string): string {
+  const safeValue = /^[=+\-@]/.test(value.trim()) ? `'${value}` : value;
+  const escaped = safeValue.replaceAll('"', '""');
+  return /[",\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
 }
 
 export function createSampleReadings(): SensorReading[] {
