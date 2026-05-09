@@ -10,6 +10,61 @@ export const sensorReadingSchema = z.object({
   label: z.string().default("sensor"),
 });
 
+export const inferredFieldSchema = z.object({
+  index: z.number(),
+  name: z.string(),
+  type: z.enum(["time", "timestamp", "value", "unit", "label", "metadata"]),
+  unit: z.string().optional(),
+  confidence: z.number(),
+  reasons: z.array(z.string()),
+});
+
+export const skippedRowSchema = z.object({
+  lineNumber: z.number(),
+  raw: z.string(),
+  reason: z.string(),
+});
+
+export const dataAnomalySchema = z.object({
+  type: z.enum([
+    "missing-value",
+    "duplicate-time",
+    "outlier",
+    "formula-risk",
+    "partial-row",
+    "mixed-schema",
+  ]),
+  severity: z.enum(["info", "warning", "danger"]),
+  message: z.string(),
+  lineNumber: z.number().optional(),
+  readingId: z.string().optional(),
+});
+
+export const sensorImportSummarySchema = z.object({
+  sourceId: z.string(),
+  sourceName: z.string(),
+  sourceFormat: z.enum([
+    "empty",
+    "tabular-csv",
+    "metadata-preamble-csv",
+    "timestamped-logger-csv",
+    "arduino-serial-log",
+    "partial-single-column",
+  ]),
+  delimiter: z.string(),
+  decimalSeparator: z.enum([".", ","]),
+  headerRow: z.number().nullable(),
+  rowCount: z.number(),
+  importedCount: z.number(),
+  skippedRows: z.array(skippedRowSchema),
+  anomalies: z.array(dataAnomalySchema),
+  fields: z.array(inferredFieldSchema),
+  confidence: z.number(),
+  confidenceLabel: z.enum(["high", "medium", "low"]),
+  reasons: z.array(z.string()),
+  durationMs: z.number(),
+});
+
 export const voiceNoteSchema = z.object({
   id: z.string(),
   createdAt: z.string(),
@@ -32,6 +87,13 @@ export const reportSectionSchema = z.object({
   body: z.string(),
 });
 
+export const activityEventSchema = z.object({
+  id: z.string(),
+  createdAt: z.string(),
+  type: z.enum(["created", "sensor-imported", "report-exported", "notebook-imported"]),
+  summary: z.string(),
+});
+
 export const experimentSchema = z.object({
   schemaVersion: z.literal(schemaVersion),
   id: z.string(),
@@ -47,15 +109,19 @@ export const experimentSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   sensorReadings: z.array(sensorReadingSchema),
+  sensorImportSummary: sensorImportSummarySchema.nullable().default(null),
   voiceNotes: z.array(voiceNoteSchema),
   imageMetadata: z.array(imageMetadataSchema),
   reportSections: z.array(reportSectionSchema),
+  activityLog: z.array(activityEventSchema).default([]),
 });
 
 export type SensorReading = z.infer<typeof sensorReadingSchema>;
+export type SensorImportSummary = z.infer<typeof sensorImportSummarySchema>;
 export type VoiceNote = z.infer<typeof voiceNoteSchema>;
 export type ImageMetadata = z.infer<typeof imageMetadataSchema>;
 export type ReportSection = z.infer<typeof reportSectionSchema>;
+export type ActivityEvent = z.infer<typeof activityEventSchema>;
 export type Experiment = z.infer<typeof experimentSchema>;
 
 export function createId(prefix: string): string {
@@ -87,9 +153,18 @@ export function createExperiment(): Experiment {
     createdAt: now,
     updatedAt: now,
     sensorReadings: [],
+    sensorImportSummary: null,
     voiceNotes: [],
     imageMetadata: [],
     reportSections: [],
+    activityLog: [
+      {
+        id: createId("activity"),
+        createdAt: now,
+        type: "created",
+        summary: "Notebook created.",
+      },
+    ],
   };
 }
 

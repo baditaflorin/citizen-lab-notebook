@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { CapabilityGrid } from "./components/CapabilityGrid";
+import { DebugOverlay } from "./components/DebugOverlay";
 import { Header } from "./components/Header";
 import { AnalysisPanel } from "./features/analysis/AnalysisPanel";
 import { renderSensorFigure } from "./features/analysis/figure";
@@ -8,6 +9,7 @@ import { ExperimentSetup } from "./features/experiments/ExperimentSetup";
 import { ImagePanel } from "./features/images/ImagePanel";
 import { ReportPanel } from "./features/report/ReportPanel";
 import { SensorPanel } from "./features/sensors/SensorPanel";
+import type { SensorImportResult } from "./features/sensors/importer";
 import { VoicePanel } from "./features/voice/VoicePanel";
 import { resolveCommitInfo, type CommitInfo } from "./lib/buildInfo";
 import { downloadText } from "./lib/download";
@@ -19,6 +21,7 @@ import {
 } from "./lib/storage";
 import {
   createExperiment,
+  createId,
   touchExperiment,
   type Experiment,
   type ImageMetadata,
@@ -98,6 +101,33 @@ export function App() {
     updateExperiment({ sensorReadings });
   }
 
+  function appendActivity(
+    type: Experiment["activityLog"][number]["type"],
+    summary: string,
+    experimentOverride = experiment,
+  ): Experiment["activityLog"] {
+    return [
+      ...experimentOverride.activityLog,
+      {
+        id: createId("activity"),
+        createdAt: new Date().toISOString(),
+        type,
+        summary,
+      },
+    ];
+  }
+
+  function handleSensorImport(result: SensorImportResult) {
+    updateExperiment({
+      sensorReadings: [...experiment.sensorReadings, ...result.readings],
+      sensorImportSummary: result.summary,
+      activityLog: appendActivity(
+        "sensor-imported",
+        `Imported ${result.readings.length} readings from ${result.summary.sourceName} with ${result.summary.confidenceLabel} confidence.`,
+      ),
+    });
+  }
+
   function addVoiceNote(note: VoiceNote) {
     updateExperiment({ voiceNotes: [...experiment.voiceNotes, note] });
   }
@@ -122,6 +152,9 @@ export function App() {
   }
 
   function exportJson() {
+    updateExperiment({
+      activityLog: appendActivity("report-exported", "Notebook JSON exported."),
+    });
     downloadText(
       `${experiment.title || "experiment"}.json`,
       exportExperimentJson(experiment),
@@ -136,7 +169,12 @@ export function App() {
 
     try {
       const imported = importExperimentJson(await file.text());
-      setExperiment(touchExperiment(imported));
+      setExperiment(
+        touchExperiment({
+          ...imported,
+          activityLog: appendActivity("notebook-imported", "Notebook JSON imported.", imported),
+        }),
+      );
       setSaveState("imported notebook");
     } catch (error) {
       setSaveState(error instanceof Error ? error.message : "import failed");
@@ -169,7 +207,12 @@ export function App() {
               onNew={newExperiment}
               onExport={exportJson}
             />
-            <SensorPanel readings={experiment.sensorReadings} onChange={updateReadings} />
+            <SensorPanel
+              readings={experiment.sensorReadings}
+              importSummary={experiment.sensorImportSummary}
+              onChange={updateReadings}
+              onImportComplete={handleSensorImport}
+            />
             <AnalysisPanel
               title={experiment.title}
               readings={experiment.sensorReadings}
@@ -193,6 +236,7 @@ export function App() {
           </aside>
         </div>
       </main>
+      <DebugOverlay experiment={experiment} />
     </div>
   );
 }
