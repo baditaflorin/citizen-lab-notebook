@@ -1,4 +1,4 @@
-.PHONY: help install-hooks dev build test test-integration smoke lint fmt pages-preview demo-screenshot clean hooks-pre-commit hooks-commit-msg hooks-pre-push
+.PHONY: help install-hooks dev build test test-integration smoke lint fmt perf pages-preview demo-screenshot clean hooks-pre-commit hooks-commit-msg hooks-pre-push
 
 help:
 	@printf "%s\n" "Citizen Lab Notebook targets"
@@ -10,6 +10,7 @@ help:
 	@printf "%s\n" "  make smoke             build, serve docs/, and run a browser smoke test"
 	@printf "%s\n" "  make lint              run ESLint, Prettier check, TypeScript, and npm audit"
 	@printf "%s\n" "  make fmt               format files"
+	@printf "%s\n" "  make perf              measure real-data import performance"
 	@printf "%s\n" "  make pages-preview     serve docs/ under the GitHub Pages base path"
 	@printf "%s\n" "  make demo-screenshot   capture docs/demo.png for the README"
 	@printf "%s\n" "  make clean             remove generated local artifacts"
@@ -42,6 +43,9 @@ lint:
 
 fmt:
 	npm run fmt
+
+perf:
+	npm run perf:fixtures
 
 pages-preview:
 	bash scripts/pages-preview.sh

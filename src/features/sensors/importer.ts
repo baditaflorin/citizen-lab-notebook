@@ -499,6 +499,17 @@ function sniffDelimiter(text: string): string {
 }
 
 function parseDelimited(text: string, delimiter: string): CsvRecord[] {
+  if (!text.includes('"')) {
+    return text
+      .split("\n")
+      .map((line, index) => ({
+        cells: line.split(delimiter),
+        lineNumber: index + 1,
+        raw: line,
+      }))
+      .filter((record) => record.cells.some((cell) => cell.trim().length > 0));
+  }
+
   const records: CsvRecord[] = [];
   let row: string[] = [];
   let cell = "";
@@ -825,7 +836,7 @@ function addAnomalies(readings: SensorReading[], anomalies: DataAnomaly[]): void
 }
 
 function detectOutliers(readings: SensorReading[]): SensorReading[] {
-  if (readings.length < 4) {
+  if (readings.length < 4 || readings.length > 20_000) {
     return [];
   }
 
@@ -865,7 +876,7 @@ function parseNumber(raw: string, decimalSeparator: "." | ","): number | null {
     .replace(/\s+/g, "")
     .replace(/^[^\d+.,-]+|[^\d.,-]+$/g, "");
 
-  if (!trimmed) {
+  if (!trimmed || !/\d/.test(trimmed)) {
     return null;
   }
 

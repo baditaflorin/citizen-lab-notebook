@@ -1,0 +1,97 @@
+{
+  "generatedAt": "2026-05-09T10:28:45.740Z",
+  "fixtureCount": 10,
+  "passRate": 1,
+  "medianMs": 0.299,
+  "p95Ms": 2.328,
+  "worstMs": 2.328,
+  "huge100k": {
+    "readings": 100000,
+    "confidence": 1,
+    "durationMs": 832.754,
+    "targetMs": 2000,
+    "passesTarget": true
+  },
+  "fixtures": [
+    {
+      "fixture": "R01-clean-classroom.csv",
+      "readings": 5,
+      "confidence": 1,
+      "durationMs": 2.328,
+      "anomalies": 0,
+      "skippedRows": 0
+    },
+    {
+      "fixture": "R02-excel-quoted.csv",
+      "readings": 4,
+      "confidence": 1,
+      "durationMs": 0.74,
+      "anomalies": 0,
+      "skippedRows": 0
+    },
+    {
+      "fixture": "R03-phyphox-eu.csv",
+      "readings": 4,
+      "confidence": 1,
+      "durationMs": 0.365,
+      "anomalies": 0,
+      "skippedRows": 0
+    },
+    {
+      "fixture": "R04-vernier-preamble.csv",
+      "readings": 4,
+      "confidence": 1,
+      "durationMs": 0.197,
+      "anomalies": 0,
+      "skippedRows": 3
+    },
+    {
+      "fixture": "R05-arduino-serial.txt",
+      "readings": 8,
+      "confidence": 0.8,
+      "durationMs": 0.095,
+      "anomalies": 0,
+      "skippedRows": 0
+    },
+    {
+      "fixture": "R06-microbit-logger.csv",
+      "readings": 6,
+      "confidence": 1,
+      "durationMs": 0.509,
+      "anomalies": 0,
+      "skippedRows": 1
+    },
+    {
+      "fixture": "R07-messy-student.csv",
+      "readings": 4,
+      "confidence": 0.777,
+      "durationMs": 0.273,
+      "anomalies": 2,
+      "skippedRows": 1
+    },
+    {
+      "fixture": "R08-phone-sensor-large.csv",
+      "readings": 20,
+      "confidence": 1,
+      "durationMs": 0.299,
+      "anomalies": 0,
+      "skippedRows": 0
+    },
+    {
+      "fixture": "R09-truncated.csv",
+      "readings": 2,
+      "confidence": 0.55,
+      "durationMs": 0.194,
+      "anomalies": 3,
+      "skippedRows": 1
+    },
+    {
+      "fixture": "R10-adversarial.csv",
+      "readings": 3,
+      "confidence": 0.88,
+      "durationMs": 0.209,
+      "anomalies": 3,
+      "skippedRows": 0
+    }
+  ]
+}
