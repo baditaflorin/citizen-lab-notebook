@@ -1,0 +1,7 @@
+# Foam height copied from notebook
+time,value,unit,label
+0,0.4,cm,foam height
+60,,cm,foam height
+60,0.7,cm,foam height
+120,9999,cm,foam height # typo?
+180,1.8,cm,foam height

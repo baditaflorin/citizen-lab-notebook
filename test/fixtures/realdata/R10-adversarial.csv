@@ -1,0 +1,4 @@
+time,value,unit,label
+0,1.2,cm,=HYPERLINK("https://example.com","click")
+60,1.5,cm,foam height
+120,1.7,cm,“foam height”

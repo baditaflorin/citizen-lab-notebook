@@ -1,0 +1,11 @@
+{
+  "id": "R09",
+  "sourceFormat": "partial-single-column",
+  "delimiter": ",",
+  "minReadings": 2,
+  "labels": ["Foam Height"],
+  "unit": "cm",
+  "confidenceAtLeast": 0.45,
+  "skippedAtLeast": 1,
+  "anomaliesAtLeast": 1
+}

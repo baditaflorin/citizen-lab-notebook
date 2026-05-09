@@ -1,0 +1,4 @@
+temperature: 23.4 humidity: 51
+temperature: 23.8 humidity: 52
+temperature: 24.1 humidity: 53
+temperature: 24.4 humidity: 54

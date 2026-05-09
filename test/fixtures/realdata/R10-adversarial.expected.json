@@ -1,0 +1,11 @@
+{
+  "id": "R10",
+  "sourceFormat": "tabular-csv",
+  "delimiter": ",",
+  "minReadings": 3,
+  "labels": ["foam height"],
+  "unit": "cm",
+  "confidenceAtLeast": 0.55,
+  "skippedAtMost": 0,
+  "anomaliesAtLeast": 1
+}

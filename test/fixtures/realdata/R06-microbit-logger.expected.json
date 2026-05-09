@@ -1,0 +1,10 @@
+{
+  "id": "R06",
+  "sourceFormat": "timestamped-logger-csv",
+  "delimiter": ",",
+  "minReadings": 6,
+  "labels": ["temperature", "light level"],
+  "confidenceAtLeast": 0.75,
+  "skippedAtMost": 1,
+  "anomaliesAtLeast": 0
+}

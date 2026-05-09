@@ -1,0 +1,10 @@
+{
+  "id": "R05",
+  "sourceFormat": "arduino-serial-log",
+  "delimiter": "serial-labels",
+  "minReadings": 8,
+  "labels": ["temperature", "humidity"],
+  "confidenceAtLeast": 0.7,
+  "skippedAtMost": 0,
+  "anomaliesAtLeast": 0
+}

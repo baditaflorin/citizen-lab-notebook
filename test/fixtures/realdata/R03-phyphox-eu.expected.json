@@ -1,0 +1,12 @@
+{
+  "id": "R03",
+  "sourceFormat": "tabular-csv",
+  "delimiter": ";",
+  "decimalSeparator": ",",
+  "minReadings": 4,
+  "labels": ["Acceleration"],
+  "unit": "m/s²",
+  "confidenceAtLeast": 0.8,
+  "skippedAtMost": 0,
+  "anomaliesAtLeast": 0
+}

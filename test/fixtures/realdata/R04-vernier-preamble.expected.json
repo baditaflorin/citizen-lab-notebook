@@ -1,0 +1,11 @@
+{
+  "id": "R04",
+  "sourceFormat": "metadata-preamble-csv",
+  "delimiter": ",",
+  "minReadings": 4,
+  "labels": ["Foam Height"],
+  "unit": "cm",
+  "confidenceAtLeast": 0.75,
+  "skippedAtMost": 3,
+  "anomaliesAtLeast": 0
+}
