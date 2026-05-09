@@ -329,6 +329,22 @@ function parseTabular(
     detectFormulaRisk(row, record, anomalies);
 
     const time = inferTime(row, timeField, decimalSeparator, baseTimestamp, generatedTime);
+
+    if (time === null) {
+      skippedRows.push({
+        lineNumber: record.lineNumber,
+        raw: record.raw,
+        reason: `The ${timeField?.name ?? "time"} value was not a valid time or timestamp.`,
+      });
+      anomalies.push({
+        type: "partial-row",
+        severity: "warning",
+        message: `Row ${record.lineNumber} was skipped because its time value could not be read.`,
+        lineNumber: record.lineNumber,
+      });
+      continue;
+    }
+
     let importedFromRow = 0;
 
     for (const field of valueFields) {
@@ -674,7 +690,7 @@ function inferTime(
   decimalSeparator: "." | ",",
   baseTimestamp: number | null,
   generatedTime: number,
-): number {
+): number | null {
   if (!timeField) {
     return generatedTime;
   }
@@ -695,7 +711,7 @@ function inferTime(
     return /\(ms\)/i.test(timeField.name) ? numeric / 1000 : numeric;
   }
 
-  return generatedTime;
+  return null;
 }
 
 function firstTimestamp(

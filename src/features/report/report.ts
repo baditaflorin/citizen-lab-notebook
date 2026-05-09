@@ -1,4 +1,5 @@
 import type { Experiment, ReportSection } from "../../types";
+import { schemaVersion } from "../../types";
 import type { SummaryStats } from "../analysis/stats";
 
 export interface ReportInput {
@@ -6,6 +7,11 @@ export interface ReportInput {
   stats: SummaryStats;
   figureSvg: string;
   aiDraft?: string;
+}
+
+export interface ReportRenderOptions {
+  generatedAt?: string;
+  appVersion?: string;
 }
 
 function sentenceList(items: string[]): string {
@@ -24,6 +30,11 @@ export function buildReportSections(input: ReportInput): ReportSection[] {
   const metadata = experiment.imageMetadata.map(
     (image) => `${image.name}: ${Object.keys(image.fields).join(", ")}`,
   );
+  const importSummary = experiment.sensorImportSummary;
+  const quality =
+    importSummary === null
+      ? "No import summary is available for this dataset."
+      : `Imported ${importSummary.importedCount} readings from ${importSummary.sourceName} as ${importSummary.sourceFormat} with ${importSummary.confidenceLabel} confidence. ${importSummary.skippedRows.length} row(s) were skipped and ${importSummary.anomalies.length} issue(s) were flagged.`;
   const trend =
     stats.slope === null
       ? "The dataset does not yet contain enough points to estimate a trend."
@@ -68,6 +79,11 @@ export function buildReportSections(input: ReportInput): ReportSection[] {
       body: `Count=${stats.count}, mean=${stats.mean ?? "n/a"}, median=${stats.median ?? "n/a"}, standard deviation=${stats.standardDeviation ?? "n/a"}, min=${stats.min ?? "n/a"}, max=${stats.max ?? "n/a"}. ${trend}`,
     },
     {
+      id: "quality",
+      title: "Data Quality",
+      body: quality,
+    },
+    {
       id: "metadata",
       title: "Image Metadata",
       body: sentenceList(metadata),
@@ -88,9 +104,18 @@ export function buildReportSections(input: ReportInput): ReportSection[] {
   ];
 }
 
-export function renderReportHtml(input: ReportInput): string {
+export function renderReportHtml(input: ReportInput, options: ReportRenderOptions = {}): string {
   const sections = buildReportSections(input);
-  const generatedAt = new Date().toLocaleString();
+  const generatedAt = options.generatedAt ?? new Date().toISOString();
+  const provenance = {
+    app: "Citizen Lab Notebook",
+    appVersion: options.appVersion ?? "0.2.0",
+    schemaVersion,
+    generatedAt,
+    experimentId: input.experiment.id,
+    sensorImportSummary: input.experiment.sensorImportSummary,
+  };
+  const provenanceJson = JSON.stringify(provenance).replaceAll("<", "\\u003c");
 
   return `<!doctype html>
 <html lang="en">
@@ -110,7 +135,7 @@ export function renderReportHtml(input: ReportInput): string {
 </head>
 <body>
   <h1>${escapeHtml(input.experiment.title)}</h1>
-  <p class="meta">Generated ${escapeHtml(generatedAt)} by Citizen Lab Notebook</p>
+  <p class="meta">Generated ${escapeHtml(generatedAt)} by Citizen Lab Notebook v${escapeHtml(provenance.appVersion)}</p>
   <figure>
     ${input.figureSvg}
     <figcaption>Figure 1. Sensor readings captured or imported during the experiment.</figcaption>
@@ -123,6 +148,7 @@ export function renderReportHtml(input: ReportInput): string {
   </section>`,
     )
     .join("\n")}
+  <script type="application/json" id="citizen-lab-provenance">${provenanceJson}</script>
 </body>
 </html>`;
 }

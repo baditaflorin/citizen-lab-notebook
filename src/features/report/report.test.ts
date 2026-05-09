@@ -11,10 +11,20 @@ describe("report generation", () => {
     const stats = computeSummaryStats(experiment.sensorReadings);
     const figureSvg = renderSensorFigure(experiment.sensorReadings, experiment.title);
     const sections = buildReportSections({ experiment, stats, figureSvg });
-    const html = renderReportHtml({ experiment, stats, figureSvg });
+    const html = renderReportHtml(
+      { experiment, stats, figureSvg },
+      { generatedAt: "2026-05-09T00:00:00.000Z", appVersion: "0.2.0-test" },
+    );
+    const htmlAgain = renderReportHtml(
+      { experiment, stats, figureSvg },
+      { generatedAt: "2026-05-09T00:00:00.000Z", appVersion: "0.2.0-test" },
+    );
 
     expect(sections.map((section) => section.title)).toContain("Results");
+    expect(sections.map((section) => section.title)).toContain("Data Quality");
     expect(html).toContain("<!doctype html>");
     expect(html).toContain("Figure 1");
+    expect(html).toContain("citizen-lab-provenance");
+    expect(html).toBe(htmlAgain);
   });
 });
