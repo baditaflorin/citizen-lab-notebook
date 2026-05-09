@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 test("loads the notebook and generates a report from sample data", async ({ page }) => {
   await page.goto("./");
@@ -13,7 +15,15 @@ test("loads the notebook and generates a report from sample data", async ({ page
     "https://www.paypal.com/paypalme/florinbadita",
   );
 
-  await page.getByRole("button", { name: /Sample/i }).click();
-  await expect(page.getByText(/Count=10/)).toBeVisible();
+  const messyCsv = readFileSync(
+    join(process.cwd(), "test/fixtures/realdata/R07-messy-student.csv"),
+    "utf8",
+  );
+
+  await page.getByLabel("CSV paste box").fill(messyCsv);
+  await page.getByRole("button", { name: /Import pasted CSV/i }).click();
+  await expect(page.getByText(/Imported 4 readings with medium confidence/i)).toBeVisible();
+  await expect(page.getByText(/Flagged 2 issue/i)).toBeVisible();
+  await expect(page.getByText(/Count=4/)).toBeVisible();
   await expect(page.getByText(/commit/i).first()).toBeVisible();
 });
