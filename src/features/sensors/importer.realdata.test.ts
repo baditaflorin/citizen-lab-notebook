@@ -85,5 +85,5 @@ describe("real-data sensor import fixtures", () => {
     // Coverage instrumentation adds overhead; the non-instrumented perf script enforces the 2s target.
     expect(result.summary.durationMs).toBeLessThan(10_000);
     expect(result.summary.confidence).toBeGreaterThanOrEqual(0.85);
-  });
+  }, 15_000);
 });
