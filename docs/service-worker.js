@@ -1,4 +1,4 @@
-const CACHE_NAME = "citizen-lab-notebook-v0.1.0";
+const CACHE_NAME = "citizen-lab-notebook-v0.2.0";
 const BASE = "/citizen-lab-notebook/";
 const CORE_ASSETS = [BASE, `${BASE}index.html`, `${BASE}manifest.webmanifest`, `${BASE}icon.svg`];
 
