@@ -12,6 +12,11 @@ export interface SummaryStats {
   rSquared: number | null;
 }
 
+export interface PrimarySeries {
+  label: string | null;
+  readings: SensorReading[];
+}
+
 function round(value: number, digits = 4): number {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;
@@ -60,6 +65,34 @@ export function computeSummaryStats(readings: SensorReading[]): SummaryStats {
     intercept: regression ? round(regression.intercept) : null,
     rSquared: regression ? round(regression.rSquared) : null,
   };
+}
+
+export function selectPrimarySeries(readings: SensorReading[]): PrimarySeries {
+  if (readings.length === 0) {
+    return { label: null, readings: [] };
+  }
+
+  const groups = new Map<string, SensorReading[]>();
+
+  for (const reading of readings) {
+    const group = groups.get(reading.label);
+
+    if (group) {
+      group.push(reading);
+    } else {
+      groups.set(reading.label, [reading]);
+    }
+  }
+
+  const [label, series] = [...groups.entries()].sort(
+    (a, b) => b[1].length - a[1].length || firstIndex(readings, a[0]) - firstIndex(readings, b[0]),
+  )[0];
+
+  return { label, readings: series };
+}
+
+function firstIndex(readings: SensorReading[], label: string): number {
+  return readings.findIndex((reading) => reading.label === label);
 }
 
 export function linearRegression(

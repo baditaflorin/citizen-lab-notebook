@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SensorReading } from "../../types";
-import { computeSummaryStats, linearRegression } from "./stats";
+import { computeSummaryStats, linearRegression, selectPrimarySeries } from "./stats";
 
 const readings: SensorReading[] = [
   { id: "1", time: 0, value: 1, unit: "cm", label: "height" },
@@ -40,5 +40,18 @@ describe("linearRegression", () => {
         [2, 3],
       ]),
     ).toBeNull();
+  });
+});
+
+describe("selectPrimarySeries", () => {
+  it("keeps multi-channel analysis focused on one sensor channel", () => {
+    const primary = selectPrimarySeries([
+      { id: "1", time: 0, value: 20, unit: "C", label: "temperature" },
+      { id: "2", time: 0, value: 100, unit: "", label: "light" },
+      { id: "3", time: 1, value: 21, unit: "C", label: "temperature" },
+    ]);
+
+    expect(primary.label).toBe("temperature");
+    expect(primary.readings).toHaveLength(2);
   });
 });

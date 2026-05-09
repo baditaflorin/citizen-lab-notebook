@@ -4,7 +4,7 @@ import { DebugOverlay } from "./components/DebugOverlay";
 import { Header } from "./components/Header";
 import { AnalysisPanel } from "./features/analysis/AnalysisPanel";
 import { renderSensorFigure } from "./features/analysis/figure";
-import { computeSummaryStats } from "./features/analysis/stats";
+import { computeSummaryStats, selectPrimarySeries } from "./features/analysis/stats";
 import { ExperimentSetup } from "./features/experiments/ExperimentSetup";
 import { ImagePanel } from "./features/images/ImagePanel";
 import { ReportPanel } from "./features/report/ReportPanel";
@@ -35,13 +35,17 @@ export function App() {
   const [saveState, setSaveState] = useState("loading local notebook");
   const [commit, setCommit] = useState<CommitInfo | null>(null);
 
-  const stats = useMemo(
-    () => computeSummaryStats(experiment.sensorReadings),
+  const primarySeries = useMemo(
+    () => selectPrimarySeries(experiment.sensorReadings),
     [experiment.sensorReadings],
   );
+  const stats = useMemo(
+    () => computeSummaryStats(primarySeries.readings),
+    [primarySeries.readings],
+  );
   const figureSvg = useMemo(
-    () => renderSensorFigure(experiment.sensorReadings, experiment.title || "Experiment figure"),
-    [experiment.sensorReadings, experiment.title],
+    () => renderSensorFigure(primarySeries.readings, experiment.title || "Experiment figure"),
+    [primarySeries.readings, experiment.title],
   );
 
   useEffect(() => {
@@ -215,7 +219,7 @@ export function App() {
             />
             <AnalysisPanel
               title={experiment.title}
-              readings={experiment.sensorReadings}
+              readings={primarySeries.readings}
               stats={stats}
               figureSvg={figureSvg}
             />
