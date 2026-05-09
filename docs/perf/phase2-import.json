@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-05-09T10:28:45.740Z",
+  "generatedAt": "2026-05-09T10:33:39.902Z",
   "fixtureCount": 10,
   "passRate": 1,
-  "medianMs": 0.299,
-  "p95Ms": 2.328,
-  "worstMs": 2.328,
+  "medianMs": 0.271,
+  "p95Ms": 2.315,
+  "worstMs": 2.315,
   "huge100k": {
     "readings": 100000,
     "confidence": 1,
-    "durationMs": 832.754,
+    "durationMs": 1077.522,
     "targetMs": 2000,
     "passesTarget": true
   },
@@ -17,7 +17,7 @@
       "fixture": "R01-clean-classroom.csv",
       "readings": 5,
       "confidence": 1,
-      "durationMs": 2.328,
+      "durationMs": 2.315,
       "anomalies": 0,
       "skippedRows": 0
     },
@@ -25,7 +25,7 @@
       "fixture": "R02-excel-quoted.csv",
       "readings": 4,
       "confidence": 1,
-      "durationMs": 0.74,
+      "durationMs": 0.789,
       "anomalies": 0,
       "skippedRows": 0
     },
@@ -33,7 +33,7 @@
       "fixture": "R03-phyphox-eu.csv",
       "readings": 4,
       "confidence": 1,
-      "durationMs": 0.365,
+      "durationMs": 0.384,
       "anomalies": 0,
       "skippedRows": 0
     },
@@ -41,7 +41,7 @@
       "fixture": "R04-vernier-preamble.csv",
       "readings": 4,
       "confidence": 1,
-      "durationMs": 0.197,
+      "durationMs": 0.212,
       "anomalies": 0,
       "skippedRows": 3
     },
@@ -57,7 +57,7 @@
       "fixture": "R06-microbit-logger.csv",
       "readings": 6,
       "confidence": 1,
-      "durationMs": 0.509,
+      "durationMs": 0.119,
       "anomalies": 0,
       "skippedRows": 1
     },
@@ -65,7 +65,7 @@
       "fixture": "R07-messy-student.csv",
       "readings": 4,
       "confidence": 0.777,
-      "durationMs": 0.273,
+      "durationMs": 0.498,
       "anomalies": 2,
       "skippedRows": 1
     },
@@ -73,7 +73,7 @@
       "fixture": "R08-phone-sensor-large.csv",
       "readings": 20,
       "confidence": 1,
-      "durationMs": 0.299,
+      "durationMs": 0.271,
       "anomalies": 0,
       "skippedRows": 0
     },
@@ -81,7 +81,7 @@
       "fixture": "R09-truncated.csv",
       "readings": 2,
       "confidence": 0.55,
-      "durationMs": 0.194,
+      "durationMs": 0.15,
       "anomalies": 3,
       "skippedRows": 1
     },
@@ -89,7 +89,7 @@
       "fixture": "R10-adversarial.csv",
       "readings": 3,
       "confidence": 0.88,
-      "durationMs": 0.209,
+      "durationMs": 0.173,
       "anomalies": 3,
       "skippedRows": 0
     }

@@ -45,10 +45,10 @@ Report HTML is deterministic when `generatedAt` is supplied, and the report test
 
 Measured with `npm run perf:fixtures` on 2026-05-09.
 
-- Fixture median: 0.299 ms
-- Fixture p95: 2.328 ms
-- Fixture worst: 2.328 ms
-- 100k-row companion: 832.754 ms
+- Fixture median: 0.271 ms
+- Fixture p95: 2.315 ms
+- Fixture worst: 2.315 ms
+- 100k-row companion: 1077.522 ms
 - 100k-row target: <2000 ms
 
 Raw measurement artifact:
