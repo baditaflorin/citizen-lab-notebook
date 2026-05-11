@@ -14,6 +14,38 @@ export interface ReportRenderOptions {
   appVersion?: string;
 }
 
+export function buildConclusion(stats: SummaryStats, dependentVariable: string): string {
+  const variable = dependentVariable || "the measured value";
+
+  if (stats.slope === null || stats.rSquared === null) {
+    return "Collect more measurements before drawing a conclusion.";
+  }
+
+  if (stats.count < 5) {
+    return `Only ${stats.count} reading${stats.count === 1 ? "" : "s"} were recorded — too few to draw a reliable conclusion about ${variable}. Aim for at least five trials before claiming a trend.`;
+  }
+
+  const direction =
+    stats.slope > 0 ? "increases" : stats.slope < 0 ? "decreases" : "stays constant";
+  const slopeMagnitude = Math.abs(stats.slope);
+  const fit = stats.rSquared;
+
+  // R² thresholds follow common citizen-science teaching: >=0.7 strong, >=0.3 moderate, >=0.1 weak, else inconclusive.
+  if (fit >= 0.7) {
+    return `The data show a strong linear relationship: ${variable} ${direction} by about ${slopeMagnitude} units per time step (R²=${fit}). The fit is consistent enough to support a real trend, though more trials would still tighten the estimate.`;
+  }
+
+  if (fit >= 0.3) {
+    return `The data suggest ${variable} ${direction} with the time axis (slope ${stats.slope}, R²=${fit}), but the fit is moderate — the trend is plausible, not proven. Repeat the experiment to confirm.`;
+  }
+
+  if (fit >= 0.1) {
+    return `A weak linear trend is visible (slope ${stats.slope}, R²=${fit}), but most of the variation in ${variable} is unexplained by time alone. Treat this as a hint rather than a conclusion.`;
+  }
+
+  return `The current evidence does not support a clear linear relationship between the time axis and ${variable} (R²=${fit}). The data are too scattered to claim a trend either way; consider whether a different model or another variable would explain the pattern.`;
+}
+
 function sentenceList(items: string[]): string {
   const filtered = items.map((item) => item.trim()).filter(Boolean);
 
@@ -96,10 +128,7 @@ export function buildReportSections(input: ReportInput): ReportSection[] {
     {
       id: "conclusion",
       title: "Conclusion",
-      body:
-        stats.slope === null
-          ? "Collect more measurements before drawing a conclusion."
-          : `The current evidence ${stats.slope > 0 ? "supports a positive relationship" : "does not show a positive relationship"} between the recorded time axis and ${experiment.dependentVariable || "the measured value"}. More trials would improve confidence.`,
+      body: buildConclusion(stats, experiment.dependentVariable),
     },
   ];
 }
