@@ -93,13 +93,21 @@ button:disabled {
 }
 
 .icon-only {
-  width: 34px;
-  min-height: 34px;
+  /* WCAG 2.5.5 sets 44×44 as the minimum touch target. The original 34×34
+   * was small enough that adjacent delete buttons in VoicePanel and
+   * ImagePanel were misfiring on a 6-inch phone. */
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   padding: 0;
   border-radius: 8px;
   background: transparent;
   color: #526056;
   border-color: #cdd5c8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .file-button {
@@ -301,6 +309,45 @@ main {
   gap: 6px;
   font-weight: 750;
   color: #2d382f;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.hint-toggle {
+  width: 28px;
+  height: 28px;
+  min-height: unset;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid #cdd5c8;
+  background: transparent;
+  color: #526056;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.hint-toggle[aria-expanded="true"] {
+  background: #eef3ea;
+  color: #17211b;
+  border-color: #79a989;
+}
+
+.field-hint {
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #2d382f;
+  background: #f3f6ee;
+  border-left: 3px solid #79a989;
+  border-radius: 6px;
 }
 
 .field.wide {
@@ -616,6 +663,66 @@ textarea {
 
   .section-heading {
     flex-direction: column;
+  }
+
+  /* Stack rows of buttons rather than wrapping. Voice panel's three
+   * controls (Dictate / Record / Whisper) wrapped twice on a 360px
+   * portrait phone, leaving an awkward orphan on its own line. */
+  .button-row,
+  .section-actions,
+  .analysis-tools {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .button-row > button,
+  .section-actions > button {
+    justify-content: center;
+  }
+
+  /* Floor for incidental text on phones — the previous 0.78–0.92rem
+   * sizes were sub-13px on most Android browsers and unreadable. */
+  .note time,
+  .image-card small,
+  .status-line,
+  .empty-state,
+  .stat span,
+  .metadata-grid dt,
+  .build-strip {
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+  }
+
+  /* Pinned save-state pill so the user always sees it on a phone. */
+  .save-pill-mobile {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    background: #17211b;
+    color: #f6f7f2;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(23, 33, 27, 0.22);
+  }
+
+  .save-pill-mobile.saving {
+    background: #d99a27;
+    color: #17211b;
+  }
+
+  .save-pill-mobile.error {
+    background: #bd4f3f;
+  }
+}
+
+/* The mobile save pill is only meaningful on small screens; on larger
+ * viewports the existing build-strip already shows the same state. */
+@media (min-width: 761px) {
+  .save-pill-mobile {
+    display: none;
   }
 }
 

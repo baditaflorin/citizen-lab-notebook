@@ -240,7 +240,25 @@ export function App() {
           </aside>
         </div>
       </main>
+      <SavePill state={saveState} />
       <DebugOverlay experiment={experiment} />
+    </div>
+  );
+}
+
+function SavePill({ state }: { state: string }) {
+  const lower = state.toLowerCase();
+  const isError = lower.includes("fail") || lower.includes("error");
+  const isSaving = lower === "saving" || lower.startsWith("loading");
+  const tone = isError ? "error" : isSaving ? "saving" : "ok";
+  return (
+    <div
+      className={`save-pill-mobile ${tone}`}
+      role="status"
+      aria-live="polite"
+      aria-label={`Notebook state: ${state}`}
+    >
+      {state}
     </div>
   );
 }
